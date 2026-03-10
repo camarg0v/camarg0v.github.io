@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Cobrinha Clássico</title>
+    <style>
+        /* CSS Embutido - Foco no visual moderno e imersivo */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a2e; /* Fundo escuro premium */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            overflow: hidden; /* Evitar barras de rolagem */
+        }
+
+        h1 {
+            color: #00f2fe;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .score {
+            color: #4facfe;
+        }
+
+        .high-score {
+            color: #f093fb;
+        }
+
+        /* O Canvas onde o jogo será desenhado */
+        canvas {
+            background-color: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Painel de Game Over (inicialmente escondido) */
+        .game-over-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            display: none; /* Controlado via JavaScript */
+            border: 2px solid #e94560;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
+            z-index: 10;
+        }
+
+        .game-over-screen h2 {
+            color: #e94560;
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(233, 69, 96, 0.8);
+        }
+        
+        .game-over-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(45deg, #e94560, #d82b45);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        .btn-restart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #e94560;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Neon Snake</h1>
+
+    <div class="game-container">
+        <div class="score-board">
+            <div class="score">Placar: <span id="scoreValue">0</span></div>
+            <div class="high-score">Recorde: <span id="highScoreValue">0</span></div>
+        </div>
+        
+        <!-- O tabuleiro do jogo (400x400 pixels) -->
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Tela de fim de jogo -->
+    <div class="game-over-screen" id="gameOverScreen">
+        <h2>FIM DE JOGO</h2>
+        <p>Você marcou <span id="finalScore">0</span> pontos.</p>
+        <button class="btn-restart" onclick="resetGame()">Jogar Novamente</button>
+    </div>
+
+    <div class="instructions">Use as setas do teclado para mover a cobrinha.</div>
+
+    <script>
+        // === Lógica JavaScript do Jogo (Configuração Inicial) ===
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const scoreElement = document.getElementById('scoreValue');
+        const highScoreElement = document.getElementById('highScoreValue');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScoreElement = document.getElementById('finalScore');
+
+        // Configurações da grade
+        const gridSize = 20; // Tamanho de cada bloco (em pixels)
+        const tileCount = canvas.width / gridSize; // Quantos blocos cabem no canvas (400/20 = 20)
+
+        // Variáveis de Estado do Jogo
+        let snake = [];
+        let food = {};
+        let dx = 0; // Direção/velocidade Horizontal
+        let dy = 0; // Direção/velocidade Vertical
+        let score = 0;
+        let highScore = localStorage.getItem('snakeHighScore') || 0;
+        let gameActive = false;
+        let gameLoopInterval;
+
+        highScoreElement.textContent = highScore;
+
+        // Inicia ou reinicia os valores padrão do jogo
+        function initGame() {
+            // A cobra começa no meio da tela com 3 peças
+            snake = [
+                { x: 10, y: 10 },
+                { x: 10, y: 11 },
+                { x: 10, y: 12 }
+            ];
+            
+            // Começa subindo
+            dx = 0;
+            dy = -1;
+            
+            score = 0;
+            scoreElement.textContent = score;
+            
+            placeFood(); // Coloca a primeira comida
+            
+            gameActive = true;
+            gameOverScreen.style.display = 'none';
+
+            // Cancela se já havia um loop rodando e inicia um novo (roda a cada 100ms)
+            clearInterval(gameLoopInterval);
+            gameLoopInterval = setInterval(gameLoop, 100);
+        }
+
+        // === Função Principal de Loop ===
+        // Isso roda constantemente, movendo a cobra e desenhando a tela
+        function gameLoop() {
+            if (!gameActive) return;
+
+            updateGameLogic();
+            drawGameVisuals();
+        }
+
+        // === Lógica Matemática (Regras) ===
+        function updateGameLogic() {
+            // 1. Calcular a nova cabeça da cobra
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+            // 2. Checar Colisões com as Paredes
+            // Se passar dos limites da tela (0 a tileCount-1)
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                return renderGameOver();
+            }
+
+            // 3. Checar Colisão com o Próprio Corpo
+            for (let i = 0; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return renderGameOver();
+                }
+            }
+
+            // 4. Mover a cobra (adiciona nova cabeça)
+            snake.unshift(head);
+
+            // 5. Checar se a cabeça está na comida
+            if (head.x === food.x && head.y === food.y) {
+                // Aumenta o placar (não remove o rabo, fazendo ela crescer)
+                score += 10;
+                scoreElement.textContent = score;
+                placeFood(); // Gera nova comida
+            } else {
+                // Se não comeu, tem que remover o rabo para parecer que andou
+                snake.pop();
+            }
+        }
+
+        // Gera uma comida num ponto aleatório da grade (mas que não esteja em cima da cobra)
+        function placeFood() {
+            let emptySpotFound = false;
+            while (!emptySpotFound) {
+                // Posição aleatória na grade (0 a 19)
+                food = {
+                    x: Math.floor(Math.random() * tileCount),
+                    y: Math.floor(Math.random() * tileCount)
+                };
+
+                // Verifica se gerou em cima de alguma parte do corpo da cobra
+                emptySpotFound = true;
+                for (let part of snake) {
+                    if (part.x === food.x && part.y === food.y) {
+                        emptySpotFound = false; // Tenta gerar novamente
+                        break;
+                    }
+                }
+            }
+        }
+
+        // === Renderização Visual (Desenho) ===
+        function drawGameVisuals() {
+            // 1. Limpa o Canvas inteiro com a cor de fundo
+            ctx.fillStyle = '#16213e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Desenha a Comida (Neon Red)
+            ctx.fillStyle = '#e94560';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#e94560';
+            // Desenha um quadrado um pouco menor que a grade para ficar bonito
+            ctx.fillRect(food.x * gridSize + 2, food.y * gridSize + 2, gridSize - 4, gridSize - 4);
+
+            // 3. Desenha a Cobra (Neon Green/Blue)
+            ctx.shadowBlur = 0; // Desliga o brilho excessivo
+            snake.forEach((part, index) => {
+                // A cabeça tem uma cor levemente diferente
+                if (index === 0) {
+                    ctx.fillStyle = '#00f2fe'; // Azul claro para cabeça
+                } else {
+                    ctx.fillStyle = '#4facfe'; // Azul intermediário corpo
+                }
+
+                // Efeito gradiente/diferença de cor no corpo
+                ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+        }
+
+        // Quando o jogo acaba
+        function renderGameOver() {
+            gameActive = false;
+            clearInterval(gameLoopInterval); // Para a repetição de frames
+
+            // Salva recorde localmente se bater
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('snakeHighScore', highScore);
+                highScoreElement.textContent = highScore;
+            }
+
+            finalScoreElement.textContent = score;
+            gameOverScreen.style.display = 'block';
+        }
+
+        // Botão da tela de game over
+        function resetGame() {
+            initGame();
+        }
+
+        // === Controles (Teclado) ===
+        // O evento escuta teclas sendo pressionadas em qualquer lugar da janela
+        window.addEventListener('keydown', (e) => {
+            // Impede rolagem da tela com as setas
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+                e.preventDefault();
+            }
+
+            if (!gameActive) return;
+
+            // Muda direção, garantindo que ela não volte de ré nela mesma
+            switch (e.key) {
+                case 'ArrowUp':
+                    if (dy !== 1) { dx = 0; dy = -1; }
+                    break;
+                case 'ArrowDown':
+                    if (dy !== -1) { dx = 0; dy = 1; }
+                    break;
+                case 'ArrowLeft':
+                    if (dx !== 1) { dx = -1; dy = 0; }
+                    break;
+                case 'ArrowRight':
+                    if (dx !== -1) { dx = 1; dy = 0; }
+                    break;
+            }
+        });
+
+        // Inicializa o jogo quando abre a página
+        initGame();
+
+    </script>
+</body>
+</html>
