@@ -12,3 +12,5 @@ Este repositório é um compilado de **projetos hospedados que estou trabalhando
 - 🔨 **Ferramentas e utilidades**: Pequenos projetos que podem ser úteis
 
 Para saber mais sobre meus projetos atuais, acesse o índice pelo link **[camarg0v.github.io](https://camarg0v.github.io/)**.
+
+<img width="1064" height="801" alt="image" src="https://github.com/user-attachments/assets/e08431a0-74ab-4c9b-aad4-8bd9518557cb" />
