@@ -404,8 +404,8 @@
                 }
 
                 folders.forEach((folder, index) => {
-                    // Direciona para a pasta localmente (no servido estático)
-                    const el = createFolderElement(folder.name, `./${folder.name}/`);
+                    // Direciona para o index.html da pasta localmente (funciona no file:// e GitHub Pages)
+                    const el = createFolderElement(folder.name, `./${folder.name}/index.html`);
                     el.style.animationDelay = `${index * 0.05}s`;
                     fileGrid.appendChild(el);
                 });
@@ -432,7 +432,9 @@
                     console.warn("Utilizando dados de fallback:", err);
                     // Fallback para caso dê erro na API (ex: excedeu limite de request)
                     // Mostrar apenas a pasta "neonsnake" local
-                    renderFolders([{ name: 'neonsnake' }]);
+                    fileGrid.innerHTML = '';
+                    const elFallback = createFolderElement('neonsnake', './neonsnake/index.html');
+                    fileGrid.appendChild(elFallback);
                     itemCount.textContent = '1 item listado (Modo Offline)';
                     document.querySelector('.status-dot').style.backgroundColor = '#f59e0b';
                     document.querySelector('.status-dot').style.boxShadow = '0 0 8px #f59e0b';
