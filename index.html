@@ -429,15 +429,11 @@
                     }
                 })
                 .catch(err => {
-                    console.warn("Utilizando dados de fallback:", err);
-                    // Fallback para caso dê erro na API (ex: excedeu limite de request)
-                    // Mostrar apenas a pasta "neonsnake" local
-                    fileGrid.innerHTML = '';
-                    const elFallback = createFolderElement('neonsnake', './neonsnake/index.html');
-                    fileGrid.appendChild(elFallback);
-                    itemCount.textContent = '1 item listado (Modo Offline)';
-                    document.querySelector('.status-dot').style.backgroundColor = '#f59e0b';
-                    document.querySelector('.status-dot').style.boxShadow = '0 0 8px #f59e0b';
+                    console.warn("Erro ao buscar dados na API:", err);
+                    fileGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); margin-top: 2rem;">Não foi possível carregar as pastas (Modo Offline/Erro).</div>';
+                    itemCount.textContent = '0 itens (Modo Offline)';
+                    document.querySelector('.status-dot').style.backgroundColor = '#ef4444';
+                    document.querySelector('.status-dot').style.boxShadow = '0 0 8px #ef4444';
                 });
         });
     </script>
