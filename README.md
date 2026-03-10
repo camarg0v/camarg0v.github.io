@@ -11,4 +11,4 @@ Este repositório é um compilado de **projetos hospedados que estou trabalhando
 - 🎵 **Vibecoding**: Criações livres, sem pressão, apenas pelo prazer de criar e explorar
 - 🔨 **Ferramentas e utilidades**: Pequenos projetos que podem ser úteis
 
-Acesse o link <a>camarg0v.github.io</a> para encontrar o índice de projetos hospedados atualmente.
+Para saber mais sobre meus projetos atuais, acesse o índice pelo link **[camarg0v.github.io](camarg0v.github.io)**.
