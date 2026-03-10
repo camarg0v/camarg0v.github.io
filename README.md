@@ -1,0 +1,14 @@
+# camarg0v.github.io
+
+Bem-vindo ao meu espaço pessoal no GitHub Pages! 🎨
+
+Este repositório é um compilado de **projetos hospedados que estou trabalhando atualmente**, rascunhos, experimentos de **vibecoding** e ideias em desenvolvimento.
+
+## O que você encontrará aqui?
+
+- 🚀 **Projetos em andamento**: Trabalhos que estou desenvolvendo e refinando
+- 📝 **Rascunhos e protótipos**: Ideias iniciais e conceitos experimentais
+- 🎵 **Vibecoding**: Criações livres, sem pressão, apenas pelo prazer de criar e explorar
+- 🔨 **Ferramentas e utilidades**: Pequenos projetos que podem ser úteis
+
+Acesse o link <a>camarg0v.github.io</a> para encontrar o índice de projetos hospedados atualmente.
