@@ -102,6 +102,9 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             font-weight: bold;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .btn-restart:hover {
@@ -114,6 +117,112 @@
             color: #888;
             font-size: 0.9rem;
             text-align: center;
+        }
+
+        /* Novas Classes para o Menu Inical */
+        .start-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #00f2fe;
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+            z-index: 20;
+            width: 320px;
+        }
+
+        .start-screen h2 {
+            color: #00f2fe;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .options-section {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .options-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 5px;
+        }
+
+        .options-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Cores Ativas Dificuldade */
+        .option-btn.active.diff-facil { background: #4caf50; border-color: #4caf50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
+        .option-btn.active.diff-medio { background: #ff9800; border-color: #ff9800; box-shadow: 0 0 10px rgba(255, 152, 0, 0.5); }
+        .option-btn.active.diff-dificil { background: #e94560; border-color: #e94560; box-shadow: 0 0 10px rgba(233, 69, 96, 0.5); }
+
+        /* Cores Ativas Cores da Cobra */
+        .option-btn.active.color-azul { background: #00f2fe; border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.5); color: #000; font-weight: bold;}
+        .option-btn.active.color-verde { background: #00ff87; border-color: #00ff87; box-shadow: 0 0 10px rgba(0, 255, 135, 0.5); color: #000; font-weight: bold;}
+        .option-btn.active.color-vermelho { background: #ff0844; border-color: #ff0844; box-shadow: 0 0 10px rgba(255, 8, 68, 0.5); color: #fff; font-weight: bold;}
+
+        .btn-start {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+        }
+        
+        .btn-menu {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+        .btn-menu:hover {
+            background: rgba(255,255,255,0.1);
         }
     </style>
 </head>
@@ -131,11 +240,37 @@
         <canvas id="gameCanvas" width="400" height="400"></canvas>
     </div>
 
+    <!-- Tela de Menu Inicial -->
+    <div class="start-screen" id="startScreen">
+        <h2>Configurar Jogo</h2>
+        
+        <div class="options-section">
+            <h3>Dificuldade (Velocidade)</h3>
+            <div class="options-group" id="difficultyOptions">
+                <button class="option-btn diff-facil active" data-speed="150" data-diff="facil" onclick="selectDifficulty(this)">Fácil</button>
+                <button class="option-btn diff-medio" data-speed="100" data-diff="medio" onclick="selectDifficulty(this)">Médio</button>
+                <button class="option-btn diff-dificil" data-speed="50" data-diff="dificil" onclick="selectDifficulty(this)">Difícil</button>
+            </div>
+        </div>
+
+        <div class="options-section">
+            <h3>Cor da Cobrinha</h3>
+            <div class="options-group" id="colorOptions">
+                <button class="option-btn color-azul active" data-color="azul" onclick="selectColor(this)">Azul</button>
+                <button class="option-btn color-verde" data-color="verde" onclick="selectColor(this)">Verde</button>
+                <button class="option-btn color-vermelho" data-color="vermelho" onclick="selectColor(this)">Vermelho</button>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="startGameFromMenu()">COMEÇAR JOGO</button>
+    </div>
+
     <!-- Tela de fim de jogo -->
     <div class="game-over-screen" id="gameOverScreen">
         <h2>FIM DE JOGO</h2>
         <p>Você marcou <span id="finalScore">0</span> pontos.</p>
         <button class="btn-restart" onclick="resetGame()">Jogar Novamente</button>
+        <button class="btn-menu" onclick="returnToMenu()">Voltar ao Menu</button>
     </div>
 
     <div class="instructions">Use as setas do teclado para mover a cobrinha.</div>
@@ -149,6 +284,7 @@
         const highScoreElement = document.getElementById('highScoreValue');
         const gameOverScreen = document.getElementById('gameOverScreen');
         const finalScoreElement = document.getElementById('finalScore');
+        const startScreen = document.getElementById('startScreen');
 
         // Configurações da grade
         const gridSize = 20; // Tamanho de cada bloco (em pixels)
@@ -160,10 +296,16 @@
         let dx = 0; // Direção/velocidade Horizontal
         let dy = 0; // Direção/velocidade Vertical
         let score = 0;
-        let highScore = localStorage.getItem('snakeHighScore') || 0;
         let gameActive = false;
         let gameLoopInterval;
 
+        // Novas variáveis de configuração
+        let currentSpeed = 150; // Padrão: Fácil (mais lento, mais fácil)
+        let currentDifficulty = 'facil';
+        let currentColorTheme = 'azul'; // Padrão: Azul
+
+        // Recorde agora depende da dificuldade
+        let highScore = localStorage.getItem('snakeHighScore_' + currentDifficulty) || 0;
         highScoreElement.textContent = highScore;
 
         // Inicia ou reinicia os valores padrão do jogo
@@ -187,9 +329,9 @@
             gameActive = true;
             gameOverScreen.style.display = 'none';
 
-            // Cancela se já havia um loop rodando e inicia um novo (roda a cada 100ms)
+            // Cancela se já havia um loop rodando e inicia um novo
             clearInterval(gameLoopInterval);
-            gameLoopInterval = setInterval(gameLoop, 100);
+            gameLoopInterval = setInterval(gameLoop, currentSpeed);
         }
 
         // === Função Principal de Loop ===
@@ -268,17 +410,28 @@
             // Desenha um quadrado um pouco menor que a grade para ficar bonito
             ctx.fillRect(food.x * gridSize + 2, food.y * gridSize + 2, gridSize - 4, gridSize - 4);
 
-            // 3. Desenha a Cobra (Neon Green/Blue)
+            // 3. Desenha a Cobra usando as cores do tema escolhido
             ctx.shadowBlur = 0; // Desliga o brilho excessivo
             snake.forEach((part, index) => {
-                // A cabeça tem uma cor levemente diferente
-                if (index === 0) {
-                    ctx.fillStyle = '#00f2fe'; // Azul claro para cabeça
-                } else {
-                    ctx.fillStyle = '#4facfe'; // Azul intermediário corpo
+                let headColor = '#00f2fe';
+                let bodyColor = '#4facfe';
+
+                if (currentColorTheme === 'verde') {
+                    headColor = '#00ff87';
+                    bodyColor = '#4caf50';
+                } else if (currentColorTheme === 'vermelho') {
+                    headColor = '#ff0844';
+                    bodyColor = '#e94560';
                 }
 
-                // Efeito gradiente/diferença de cor no corpo
+                // A cabeça tem uma cor levemente diferente
+                if (index === 0) {
+                    ctx.fillStyle = headColor;
+                } else {
+                    ctx.fillStyle = bodyColor;
+                }
+
+                // Efeito gradiente/diferença de cor no corpo e desenha na grade
                 ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2);
             });
         }
@@ -291,7 +444,7 @@
             // Salva recorde localmente se bater
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem('snakeHighScore', highScore);
+                localStorage.setItem('snakeHighScore_' + currentDifficulty, highScore);
                 highScoreElement.textContent = highScore;
             }
 
@@ -331,8 +484,49 @@
             }
         });
 
-        // Inicializa o jogo quando abre a página
-        initGame();
+        // === Controles de Interface do Menu ===
+        function selectDifficulty(btn) {
+            // Remove 'active' de todos da dificuldade
+            document.querySelectorAll('#difficultyOptions .option-btn').forEach(b => b.classList.remove('active'));
+            // Adiciona no clicado
+            btn.classList.add('active');
+            // Salva a velocidade selecionada e a dificuldade
+            currentSpeed = parseInt(btn.getAttribute('data-speed'));
+            currentDifficulty = btn.getAttribute('data-diff');
+            
+            // Atualiza recorde na tela para a dificuldade escolhida
+            highScore = localStorage.getItem('snakeHighScore_' + currentDifficulty) || 0;
+            highScoreElement.textContent = highScore;
+        }
+
+        function selectColor(btn) {
+            document.querySelectorAll('#colorOptions .option-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentColorTheme = btn.getAttribute('data-color');
+        }
+
+        function startGameFromMenu() {
+            // Esconde o menu inicial
+            startScreen.style.display = 'none';
+            // Inicia o jogo
+            initGame();
+        }
+
+        function returnToMenu() {
+            // Esconde tela de Game Over e mostra Menu
+            gameOverScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+            
+            // Limpa o canvas para que não fique a tela do "jogo perdido" ao fundo no menu
+            ctx.fillStyle = '#16213e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Desenhar a tela preta inicial antes do jogo começar
+        ctx.fillStyle = '#16213e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // O jogo não inicia mais sozinho; ele espera o clique do usuário no menu.
 
     </script>
 </body>
