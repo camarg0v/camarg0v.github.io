@@ -1,1 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositório - camarg0v</title>
+    <!-- Fonte moderna do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --surface-color: rgba(30, 32, 48, 0.65);
+            --surface-hover: rgba(45, 48, 68, 0.8);
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-color: #8b5cf6;
+            --folder-color: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass-blur: 24px;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.25) 0%, transparent 40%),
+                radial-gradient(ellipse at bottom right, rgba(56, 189, 248, 0.2) 0%, transparent 40%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .explorer-window {
+            width: 100%;
+            max-width: 960px;
+            height: 75vh;
+            min-height: 500px;
+            background: var(--surface-color);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            animation: windowEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes windowEnter {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .title-bar {
+            height: 52px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            gap: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transition: opacity 0.2s;
+        }
+        .window-controls:hover .control-btn { opacity: 1; }
+        .control-btn:not(:hover) { opacity: 0.8; }
+
+        .close { background-color: #ef4444; }
+        .minimize { background-color: #f59e0b; }
+        .maximize { background-color: #10b981; }
+
+        .path-bar {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .path-bar span {
+            color: var(--text-primary);
+            margin: 0 6px;
+            opacity: 0.5;
+        }
+        .path-bar .active-path {
+            color: var(--text-primary);
+            opacity: 1;
+        }
+
+        .explorer-content {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            background: rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            padding: 0 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item svg {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar-item:hover svg, .sidebar-item.active svg {
+            opacity: 1;
+        }
+
+        .sidebar-item.active {
+            border-left: 3px solid var(--accent-color);
+            padding-left: calc(1.5rem - 3px);
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .main-view {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1.25rem 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            opacity: 0;
+            animation: fadeInItem 0.4s ease forwards;
+        }
+
+        @keyframes fadeInItem {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-item:hover {
+            background: var(--surface-hover);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .file-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .file-item:hover .file-icon {
+            transform: scale(1.05);
+        }
+
+        .file-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: var(--folder-color);
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .file-name {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-align: center;
+            word-break: break-word;
+            font-weight: 500;
+            line-height: 1.3;
+            max-width: 100%;
+            padding: 0 4px;
+        }
+
+        .footer {
+            height: 36px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .explorer-window {
+                height: 90vh;
+            }
+            body {
+                padding: 1rem;
+            }
+        }
+        
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+            border-radius: 8px;
+        }
+        @keyframes skeletonLoading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="explorer-window">
+        <!-- Barra de Título -->
+        <div class="title-bar">
+            <div class="window-controls">
+                <div class="control-btn close"></div>
+                <div class="control-btn minimize"></div>
+                <div class="control-btn maximize"></div>
+            </div>
+            <div class="path-bar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; opacity: 0.7;">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                camarg0v.github.io <span>/</span> <span class="active-path">root</span>
+            </div>
+        </div>
+
+        <div class="explorer-content">
+            <!-- Barra Lateral -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Favoritos</div>
+                    <div class="sidebar-item active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Projetos
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Links Úteis</div>
+                    <a href="https://github.com/camarg0v" target="_blank" class="sidebar-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- Área Principal -->
+            <div class="main-view">
+                <div class="file-grid" id="file-grid">
+                    <!-- Loading Skeletons by default -->
+                    <div class="file-item" style="border: none; background: transparent;">
+                        <div class="file-icon skeleton" style="border-radius: 8px;"></div>
+                        <div class="file-name skeleton" style="height: 14px; width: 80%; border-radius: 4px;"></div>
+                    </div>
+                    <div class="file-item" style="border: none; background: transparent; animation-delay: 0.1s;">
+                        <div class="file-icon skeleton" style="border-radius: 8px;"></div>
+                        <div class="file-name skeleton" style="height: 14px; width: 70%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <div class="status-dot"></div>
+            <span id="item-count">Sincronizando com o GitHub...</span>
+        </div>
+    </div>
+
+    <!-- Script para buscar pastas dinamicamente -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const repo = 'camarg0v/camarg0v.github.io';
+            const apiUrl = `https://api.github.com/repos/${repo}/contents/`;
+            const fileGrid = document.getElementById('file-grid');
+            const itemCount = document.getElementById('item-count');
+
+            const folderIconSVG = `
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                </svg>
+            `;
+
+            const createFolderElement = (name, url, isExternal = false) => {
+                const a = document.createElement('a');
+                a.href = url;
+                a.className = 'file-item';
+                a.title = name;
+                if (isExternal) a.target = "_blank";
+                
+                a.innerHTML = `
+                    <div class="file-icon">
+                        ${folderIconSVG}
+                    </div>
+                    <div class="file-name">${name}</div>
+                `;
+                return a;
+            };
+
+            const renderFolders = (folders) => {
+                fileGrid.innerHTML = '';
+                
+                if (folders.length === 0) {
+                    fileGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); margin-top: 2rem;">Pasta vazia.</div>';
+                    itemCount.textContent = '0 itens';
+                    return;
+                }
+
+                folders.forEach((folder, index) => {
+                    // Direciona para a pasta localmente (no servido estático)
+                    const el = createFolderElement(folder.name, `./${folder.name}/`);
+                    el.style.animationDelay = `${index * 0.05}s`;
+                    fileGrid.appendChild(el);
+                });
+
+                itemCount.textContent = `${folders.length} ite${folders.length === 1 ? 'm' : 'ns'} listado${folders.length === 1 ? '' : 's'}`;
+            };
+
+            // Fetch directories from GitHub Repository
+            fetch(apiUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error('API Rate Limit ou Erro');
+                    return res.json();
+                })
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        // Filtra apenas diretórios que não começam com "." (ex: .github, .git)
+                        const folders = data.filter(item => item.type === 'dir' && !item.name.startsWith('.'));
+                        renderFolders(folders);
+                    } else {
+                        throw new Error('Formato inválido');
+                    }
+                })
+                .catch(err => {
+                    console.warn("Utilizando dados de fallback:", err);
+                    // Fallback para caso dê erro na API (ex: excedeu limite de request)
+                    // Mostrar apenas a pasta "neonsnake" local
+                    renderFolders([{ name: 'neonsnake' }]);
+                    itemCount.textContent = '1 item listado (Modo Offline)';
+                    document.querySelector('.status-dot').style.backgroundColor = '#f59e0b';
+                    document.querySelector('.status-dot').style.boxShadow = '0 0 8px #f59e0b';
+                });
+        });
+    </script>
+</body>
+</html>
