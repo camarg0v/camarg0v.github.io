@@ -1,0 +1,104 @@
+/* pixelart.css - Estilos exlusivos para o Paint.exe Pixel */
+
+.pixelart-body {
+    display: flex;
+    flex-direction: column;
+    background: var(--win-bg);
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 2px solid var(--win-border-dark);
+    box-shadow: 0 1px 0 var(--win-border-light);
+    margin-bottom: 5px;
+    height: 60px;
+}
+
+.tool-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--win-border-dark);
+    padding-right: 10px;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    width: 150px;
+}
+
+.color-btn {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--win-border-darker);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.5);
+    cursor: pointer;
+}
+
+.color-btn.selected {
+    border: 2px solid #000;
+    box-shadow: 0 0 0 1px #fff;
+}
+
+.tool-section button, .tool-section select {
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 2px 4px;
+}
+.tool-section button:active, .tool-section select:active {
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    background: #dfdfdf;
+}
+
+.tool-section button.active-tool {
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><rect width="1" height="1" fill="%23c0c0c0"/><rect width="1" height="1" x="1" y="1" fill="%23c0c0c0"/><rect width="1" height="1" x="1" fill="%23e0e0e0"/><rect width="1" height="1" y="1" fill="%23e0e0e0"/></svg>');
+}
+
+/* Canvas Area */
+.canvas-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #808080; /* Fundo de mesa típico do paint */
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    overflow: auto;
+}
+
+.pixel-canvas {
+    background: #ffffff;
+    border: 1px dashed black;
+    display: grid;
+    /* Linhas de grid geradas via JS */
+    cursor: crosshair;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    user-select: none;
+}
+
+.pixel-cell {
+    background-color: transparent;
+    border-right: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+/* Limpando bordas finais */
+.pixel-canvas .pixel-cell:nth-child(32n) { border-right: none; }

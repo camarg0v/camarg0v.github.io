@@ -1,0 +1,61 @@
+/* calculator.css - Estilo da Calculadora clássica */
+
+.calc-body {
+    background: var(--win-bg);
+}
+
+.calc-display-container {
+    padding: 5px;
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+    margin-bottom: 5px;
+    background: #ffffff;
+}
+
+.calc-display {
+    width: 100%;
+    text-align: right;
+    border: none;
+    font-size: 20px;
+    font-family: inherit;
+    font-weight: bold;
+    outline: none;
+}
+
+.calc-keypad {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.calc-btn {
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    box-shadow: inset -1px -1px 0 var(--win-border-dark);
+    font-size: 14px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    color: blue;
+}
+.calc-btn.calc-op {
+    color: red;
+}
+.calc-btn.calc-eq {
+    color: red;
+}
+
+.calc-btn:active {
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+}

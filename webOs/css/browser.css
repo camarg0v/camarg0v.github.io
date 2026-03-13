@@ -1,0 +1,104 @@
+/* browser.css - Internet Explorer 95 Style */
+
+.browser-body {
+    background: var(--win-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 2px !important;
+}
+
+.browser-toolbar {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    border-bottom: 2px solid var(--win-border-darker);
+    margin-bottom: 2px;
+    gap: 5px;
+}
+
+.browser-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.browser-btn {
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    padding: 2px 10px;
+    cursor: pointer;
+    font-size: 16px; /* Para as emojis ou icones clássicos */
+}
+
+.browser-btn:active {
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+}
+
+.browser-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.browser-address-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.url-input-container {
+    flex-grow: 1;
+    display: flex;
+    background: #ffffff;
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+}
+
+.browser-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 3px 6px;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.browser-go-btn {
+    border: none;
+    border-left: 2px solid var(--win-border-darker);
+    background: var(--win-bg);
+    padding: 0 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.browser-go-btn:active {
+    background: #e0e0e0;
+}
+
+.browser-content {
+    flex-grow: 1;
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+    display: flex;
+    background: #ffffff;
+    position: relative;
+}
+
+.browser-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff; /* Fica branco até carregar */
+}

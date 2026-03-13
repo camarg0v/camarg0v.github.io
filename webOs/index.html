@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web OS - 95 Edition</title>
+    <!-- Pixel font para vibe retrô -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pixelart.css">
+    <link rel="stylesheet" href="css/calculator.css">
+    <link rel="stylesheet" href="css/minesweeper.css">
+    <link rel="stylesheet" href="css/browser.css">
+</head>
+<body>
+
+    <!-- Desktop Background & Icons -->
+    <div id="desktop" class="desktop">
+        <div class="desktop-icon" onclick="os.openApp('notepad')">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='white'><rect width='24' height='28' x='4' y='2' fill='%23fff' stroke='black' stroke-width='1'/><line x1='6' y1='8' x2='26' y2='8' stroke='black'/><line x1='6' y1='12' x2='20' y2='12' stroke='black'/><line x1='6' y1='16' x2='24' y2='16' stroke='black'/></svg>" alt="Notepad Icon">
+            <span>Bloco de Notas</span>
+        </div>
+        
+        <div class="desktop-icon" onclick="os.openApp('pixelart')">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='white'><rect width='10' height='10' x='4' y='4' fill='red'/><rect width='10' height='10' x='18' y='4' fill='blue'/><rect width='10' height='10' x='4' y='18' fill='green'/><rect width='10' height='10' x='18' y='18' fill='yellow'/></svg>" alt="Pixel Art Icon">
+            <span>Pixel Art</span>
+        </div>
+        
+        <div class="desktop-icon" onclick="os.openApp('calculator')">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='white'><rect width='24' height='28' x='4' y='2' fill='%23c0c0c0' stroke='black' stroke-width='1'/><rect width='18' height='6' x='7' y='5' fill='white' stroke='black'/><rect width='4' height='4' x='7' y='14' fill='black'/><rect width='4' height='4' x='14' y='14' fill='black'/><rect width='4' height='4' x='21' y='14' fill='black'/><rect width='4' height='4' x='7' y='21' fill='black'/><rect width='4' height='4' x='14' y='21' fill='black'/><rect width='4' height='4' x='21' y='21' fill='black'/></svg>" alt="Calculator Icon">
+            <span>Calculadora</span>
+        </div>
+
+        <div class="desktop-icon" onclick="os.openApp('minesweeper')">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='white'><circle cx='16' cy='16' r='10' fill='black'/><path d='M16 2v6M16 30v-6M2 16h6M30 16h-6M6.1 6.1l4.2 4.2M25.9 25.9l-4.2-4.2M25.9 6.1l-4.2 4.2M6.1 25.9l4.2-4.2' stroke='red' stroke-width='2'/></svg>" alt="Minesweeper Icon">
+            <span>Minesweeper</span>
+        </div>
+
+        <div class="desktop-icon" onclick="os.openApp('browser')">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='16' cy='16' r='14' fill='%23000080'/><path d='M2 16 Q8 4 16 2 T30 16 Q24 28 16 30 T2 16' fill='none' stroke='aqua' stroke-width='2'/><path d='M16 2 A14 14 0 0 0 16 30 A14 14 0 0 0 16 2' fill='none' stroke='yellow' stroke-width='1'/></svg>" alt="Browser Icon">
+            <span>Internet Explorer</span>
+        </div>
+    </div>
+
+    <!-- Application Windows Container -->
+    <div id="windows-container">
+        
+        <!-- App: Notepad -->
+        <div class="window" id="window-notepad" style="display: none; top: 50px; left: 50px; width: 400px; height: 300px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Bloco de Notas - sem_titulo.txt</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize" onclick="os.minimizeApp('notepad')"></button>
+                    <button aria-label="Maximize" onclick="os.maximizeApp('notepad')"></button>
+                    <button aria-label="Close" onclick="os.closeApp('notepad')"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="menu-bar">
+                    <span>Arquivo</span><span>Editar</span><span>Formatar</span><span>Ajuda</span>
+                </div>
+                <textarea class="notepad-textarea" spellcheck="false" placeholder="Digite algo impressionante aqui..."></textarea>
+            </div>
+            <div class="resize-handle"></div>
+            <!-- Advanced Resize Edges -->
+            <div class="resize-edge resize-n" data-dir="n"></div><div class="resize-edge resize-s" data-dir="s"></div>
+            <div class="resize-edge resize-e" data-dir="e"></div><div class="resize-edge resize-w" data-dir="w"></div>
+            <div class="resize-edge resize-ne" data-dir="ne"></div><div class="resize-edge resize-nw" data-dir="nw"></div>
+            <div class="resize-edge resize-se" data-dir="se"></div><div class="resize-edge resize-sw" data-dir="sw"></div>
+        </div>
+
+        <!-- App: Pixel Art Editor -->
+        <div class="window" id="window-pixelart" style="display: none; top: 100px; left: 150px; width: 450px; height: 480px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Paint.exe (Pixel Edition)</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize" onclick="os.minimizeApp('pixelart')"></button>
+                    <button aria-label="Maximize" onclick="os.maximizeApp('pixelart')"></button>
+                    <button aria-label="Close" onclick="os.closeApp('pixelart')"></button>
+                </div>
+            </div>
+            <div class="window-body pixelart-body">
+                <div class="toolbar">
+                    <div class="tool-section">
+                        <span>Cores</span>
+                        <div class="color-palette" id="pa-palette"></div>
+                    </div>
+                    <div class="tool-section">
+                        <button onclick="pixelArtApp.clearCanvas()">Limpar</button>
+                        <button onclick="pixelArtApp.setEraser()" id="btn-eraser">Borracha</button>
+                    </div>
+                    <div class="tool-section">
+                        <span>Tamanho:</span>
+                        <select id="pa-size" onchange="pixelArtApp.initCanvas(this.value)">
+                            <option value="16">16x16</option>
+                            <option value="32" selected>32x32</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <div id="pa-canvas" class="pixel-canvas"></div>
+                </div>
+            </div>
+            <div class="resize-handle"></div>
+            <div class="resize-edge resize-n" data-dir="n"></div><div class="resize-edge resize-s" data-dir="s"></div>
+            <div class="resize-edge resize-e" data-dir="e"></div><div class="resize-edge resize-w" data-dir="w"></div>
+            <div class="resize-edge resize-ne" data-dir="ne"></div><div class="resize-edge resize-nw" data-dir="nw"></div>
+            <div class="resize-edge resize-se" data-dir="se"></div><div class="resize-edge resize-sw" data-dir="sw"></div>
+        </div>
+
+        <!-- App: Calculator -->
+        <div class="window" id="window-calculator" style="display: none; top: 120px; left: 200px; width: 250px; height: 320px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Calculadora</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize" onclick="os.minimizeApp('calculator')"></button>
+                    <button aria-label="Maximize" onclick="os.maximizeApp('calculator')"></button>
+                    <button aria-label="Close" onclick="os.closeApp('calculator')"></button>
+                </div>
+            </div>
+            <div class="window-body calc-body">
+                <div class="calc-display-container">
+                    <input type="text" class="calc-display" id="calc-display" value="0" readonly>
+                </div>
+                <div class="calc-keypad">
+                    <button class="calc-btn calc-clear" onclick="calcApp.clear()">C</button>
+                    <button class="calc-btn calc-clear" onclick="calcApp.clearEntry()">CE</button>
+                    <button class="calc-btn calc-op" onclick="calcApp.op('/')">/</button>
+                    <button class="calc-btn calc-op" onclick="calcApp.op('*')">*</button>
+                    
+                    <button class="calc-btn" onclick="calcApp.num(7)">7</button>
+                    <button class="calc-btn" onclick="calcApp.num(8)">8</button>
+                    <button class="calc-btn" onclick="calcApp.num(9)">9</button>
+                    <button class="calc-btn calc-op" onclick="calcApp.op('-')">-</button>
+                    
+                    <button class="calc-btn" onclick="calcApp.num(4)">4</button>
+                    <button class="calc-btn" onclick="calcApp.num(5)">5</button>
+                    <button class="calc-btn" onclick="calcApp.num(6)">6</button>
+                    <button class="calc-btn calc-op" onclick="calcApp.op('+')">+</button>
+                    
+                    <button class="calc-btn" onclick="calcApp.num(1)">1</button>
+                    <button class="calc-btn" onclick="calcApp.num(2)">2</button>
+                    <button class="calc-btn" onclick="calcApp.num(3)">3</button>
+                    <button class="calc-btn calc-eq" style="grid-row: span 2;" onclick="calcApp.eq()">=</button>
+                    
+                    <button class="calc-btn" style="grid-column: span 2;" onclick="calcApp.num(0)">0</button>
+                    <button class="calc-btn" onclick="calcApp.dot()">.</button>
+                </div>
+            </div>
+            <div class="resize-handle"></div>
+            <div class="resize-edge resize-n" data-dir="n"></div><div class="resize-edge resize-s" data-dir="s"></div>
+            <div class="resize-edge resize-e" data-dir="e"></div><div class="resize-edge resize-w" data-dir="w"></div>
+            <div class="resize-edge resize-ne" data-dir="ne"></div><div class="resize-edge resize-nw" data-dir="nw"></div>
+            <div class="resize-edge resize-se" data-dir="se"></div><div class="resize-edge resize-sw" data-dir="sw"></div>
+        </div>
+
+        <!-- App: Minesweeper -->
+        <div class="window" id="window-minesweeper" style="display: none; top: 80px; left: 300px; width: 250px; height: 320px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Campo Minado</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize" onclick="os.minimizeApp('minesweeper')"></button>
+                    <button aria-label="Maximize" onclick="os.maximizeApp('minesweeper')"></button>
+                    <button aria-label="Close" onclick="os.closeApp('minesweeper')"></button>
+                </div>
+            </div>
+            <div class="window-body ms-body">
+                <div class="ms-header">
+                    <div class="ms-counter" id="ms-mines-count">010</div>
+                    <button class="ms-face" id="ms-face" onclick="mineApp.reset()">🙂</button>
+                    <div class="ms-counter" id="ms-timer">000</div>
+                </div>
+                <div class="ms-grid-container">
+                    <div id="ms-grid" class="ms-grid" oncontextmenu="return false;"></div>
+                </div>
+            </div>
+            <div class="resize-handle"></div>
+            <div class="resize-edge resize-n" data-dir="n"></div><div class="resize-edge resize-s" data-dir="s"></div>
+            <div class="resize-edge resize-e" data-dir="e"></div><div class="resize-edge resize-w" data-dir="w"></div>
+            <div class="resize-edge resize-ne" data-dir="ne"></div><div class="resize-edge resize-nw" data-dir="nw"></div>
+            <div class="resize-edge resize-se" data-dir="se"></div><div class="resize-edge resize-sw" data-dir="sw"></div>
+        </div>
+
+        <!-- App: Web Browser -->
+        <div class="window" id="window-browser" style="display: none; top: 40px; left: 60px; width: 600px; height: 450px;">
+            <div class="title-bar" style="background: var(--title-bg);">
+                <div class="title-bar-text">Internet Explorer</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize" onclick="os.minimizeApp('browser')"></button>
+                    <button aria-label="Maximize" onclick="os.maximizeApp('browser')"></button>
+                    <button aria-label="Close" onclick="os.closeApp('browser')"></button>
+                </div>
+            </div>
+            <div class="window-body browser-body">
+                <div class="browser-toolbar">
+                    <div class="browser-actions">
+                        <button class="browser-btn" onclick="browserApp.goBack()" title="Voltar" id="browser-back">⬅️</button>
+                        <button class="browser-btn" onclick="browserApp.goHome()" title="Página Inicial">🏠</button>
+                        <button class="browser-btn" onclick="browserApp.reload()" title="Atualizar">🔄</button>
+                    </div>
+                    <div class="browser-address-bar">
+                        <label for="browser-url">Endereço:</label>
+                        <div class="url-input-container">
+                            <input type="text" id="browser-url" class="browser-input" placeholder="http://www.wikipedia.org" value="https://pt.wikipedia.org" />
+                            <button class="browser-go-btn" onclick="browserApp.navigate()">Ir</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="browser-content">
+                    <iframe id="browser-iframe" class="browser-iframe" src="https://pt.wikipedia.org" onload="browserApp.iframeLoaded()" sandbox="allow-scripts allow-same-origin"></iframe>
+                </div>
+            </div>
+            <div class="resize-handle"></div>
+            <div class="resize-edge resize-n" data-dir="n"></div><div class="resize-edge resize-s" data-dir="s"></div>
+            <div class="resize-edge resize-e" data-dir="e"></div><div class="resize-edge resize-w" data-dir="w"></div>
+            <div class="resize-edge resize-ne" data-dir="ne"></div><div class="resize-edge resize-nw" data-dir="nw"></div>
+            <div class="resize-edge resize-se" data-dir="se"></div><div class="resize-edge resize-sw" data-dir="sw"></div>
+        </div>
+
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <button class="start-button" id="start-button" onclick="os.toggleStartMenu()">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect width='7' height='7' x='0' y='0' fill='%23f25022'/><rect width='7' height='7' x='9' y='0' fill='%237fba00'/><rect width='7' height='7' x='0' y='9' fill='%2300a4ef'/><rect width='7' height='7' x='9' y='9' fill='%23ffb900'/></svg>" alt="Start Logo">
+            <b>Iniciar</b>
+        </button>
+        
+        <div class="taskbar-tasks" id="taskbar-tasks">
+            <!-- Active apps will appear here dynamically -->
+        </div>
+
+        <div class="taskbar-tray">
+            <span id="os-clock">12:00 AM</span>
+        </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-sidebar">
+            <span class="sidebar-text">Web OS 95</span>
+        </div>
+        <div class="start-menu-items">
+            <div class="start-item" onclick="os.openApp('notepad'); os.toggleStartMenu()">
+                <span>📝 Bloco de Notas</span>
+            </div>
+            <div class="start-item" onclick="os.openApp('pixelart'); os.toggleStartMenu()">
+                <span>🎨 Pixel Art Editor</span>
+            </div>
+            <div class="start-item" onclick="os.openApp('calculator'); os.toggleStartMenu()">
+                <span>🧮 Calculadora</span>
+            </div>
+            <div class="start-item" onclick="os.openApp('minesweeper'); os.toggleStartMenu()">
+                <span>💣 Campo Minado</span>
+            </div>
+            <div class="start-item" onclick="os.openApp('browser'); os.toggleStartMenu()">
+                <span>🌐 Internet Explorer</span>
+            </div>
+            <div class="start-divider"></div>
+            <div class="start-item" onclick="window.location.href='../index.html'">
+                <span>⬅️ Voltar ao File Explorer</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/os.js"></script>
+    <script src="js/apps/pixelart.js"></script>
+    <script src="js/apps/calculator.js"></script>
+    <script src="js/apps/minesweeper.js"></script>
+    <script src="js/apps/browser.js"></script>
+</body>
+</html>

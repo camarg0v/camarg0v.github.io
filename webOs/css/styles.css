@@ -1,0 +1,370 @@
+/* styles.css - Windows 95 Aesthetic */
+:root {
+    --win-bg: #c0c0c0; /* Clássico cinza */
+    --desktop-bg: #008080; /* Teal Windows 95 wallpaper */
+    --win-border-light: #ffffff;
+    --win-border-dark: #808080;
+    --win-border-darker: #000000;
+    --win-text: #000000;
+    --title-bg: #000080; /* Azul intenso */
+    --title-text: #ffffff;
+    --start-hover: #e0e0e0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Tahoma', 'Segoe UI', Arial, sans-serif;
+    user-select: none; /* Previne seleção acidental arrastando janelas */
+}
+
+body {
+    background-color: var(--desktop-bg);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- DESKTOP --- */
+.desktop {
+    flex-grow: 1;
+    position: relative;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.desktop-icon {
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.desktop-icon img {
+    margin-bottom: 5px;
+    filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5));
+}
+
+.desktop-icon span {
+    color: white;
+    font-size: 12px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.desktop-icon:active span, .desktop-icon:focus span {
+    background-color: #000080;
+    box-shadow: 0 0 0 1px #000080;
+}
+
+/* --- WINDOWS --- */
+.window {
+    position: absolute;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    box-shadow: inset -1px -1px 0px var(--win-border-dark), inset 1px 1px 0px var(--win-bg), 2px 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+    min-height: 150px;
+}
+
+.title-bar {
+    background: var(--title-bg);
+    color: var(--title-text);
+    padding: 3px 3px 3px 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: default;
+    height: 22px;
+}
+
+/* Para drag and drop funcionar perfeitamente, o header inteiro pode ativar */
+.title-bar.active {
+    background: var(--title-bg); /* Azul normal */
+}
+
+/* Janela inativa fica cinza */
+.window.inactive .title-bar {
+    background: #808080;
+}
+
+.title-bar-controls {
+    display: flex;
+    gap: 2px;
+}
+
+/* Botões da Janela Estilo W95 */
+.title-bar-controls button {
+    width: 16px;
+    height: 14px;
+    background: var(--win-bg);
+    border-top: 1px solid var(--win-border-light);
+    border-left: 1px solid var(--win-border-light);
+    border-right: 1px solid var(--win-border-darker);
+    border-bottom: 1px solid var(--win-border-darker);
+    box-shadow: inset -1px -1px 0 var(--win-border-dark);
+    position: relative;
+    cursor: pointer;
+}
+
+.title-bar-controls button:active {
+    border-top: 1px solid var(--win-border-darker);
+    border-left: 1px solid var(--win-border-darker);
+    border-right: 1px solid var(--win-border-light);
+    border-bottom: 1px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+}
+
+/* Ícones rudimentares nos botões usando CSS */
+.title-bar-controls button[aria-label="Minimize"]::before {
+    content: ""; position: absolute; bottom: 3px; left: 3px; width: 6px; height: 2px; background: black;
+}
+.title-bar-controls button[aria-label="Maximize"]::before {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 8px; height: 6px; border: 1px solid black; border-top-width: 2px;
+}
+.title-bar-controls button[aria-label="Close"]::before, 
+.title-bar-controls button[aria-label="Close"]::after {
+    content: ""; position: absolute; top: 2px; left: 6px; width: 1px; height: 8px; background: black; transform: rotate(45deg);
+}
+.title-bar-controls button[aria-label="Close"]::after { transform: rotate(-45deg); }
+
+.window-body {
+    flex-grow: 1;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    border-top: 1px solid var(--win-border-light);
+    border-left: 1px solid var(--win-border-light);
+}
+
+.resize-handle {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    cursor: se-resize;
+    background: repeating-linear-gradient(
+        135deg,
+        transparent,
+        transparent 2px,
+        #808080 3px,
+        #ffffff 4px
+    );
+    z-index: 100;
+}
+
+/* --- Redimensionamento Avançado (8 direcoes) --- */
+.resize-edge {
+    position: absolute;
+    z-index: 100;
+}
+.resize-n { top: -3px; left: 0; right: 0; height: 6px; cursor: n-resize; }
+.resize-s { bottom: -3px; left: 0; right: 0; height: 6px; cursor: s-resize; }
+.resize-e { top: 0; bottom: 0; right: -3px; width: 6px; cursor: e-resize; }
+.resize-w { top: 0; bottom: 0; left: -3px; width: 6px; cursor: w-resize; }
+.resize-ne { top: -3px; right: -3px; width: 8px; height: 8px; cursor: ne-resize; z-index: 101; }
+.resize-nw { top: -3px; left: -3px; width: 8px; height: 8px; cursor: nw-resize; z-index: 101; }
+.resize-se { bottom: -3px; right: -3px; width: 8px; height: 8px; cursor: se-resize; z-index: 101; }
+.resize-sw { bottom: -3px; left: -3px; width: 8px; height: 8px; cursor: sw-resize; z-index: 101; }
+
+/* Para esconder o corner-handle antigo visualmente quando maximizado */
+.window.maximized .resize-handle,
+.window.maximized .resize-edge {
+    display: none !important;
+}
+
+/* --- Menu Bar Simples --- */
+.menu-bar {
+    display: flex;
+    gap: 15px;
+    padding: 2px 5px;
+    border-bottom: 1px solid var(--win-border-dark);
+    margin-bottom: 5px;
+}
+.menu-bar span { cursor: pointer; }
+.menu-bar span:hover { background: var(--title-bg); color: white; }
+.menu-bar span::first-letter { text-decoration: underline; }
+
+/* --- APP: NOTEPAD --- */
+.notepad-textarea {
+    flex-grow: 1;
+    width: 100%;
+    resize: none;
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    outline: none;
+    user-select: text; /* Permite selecionar texto aqui */
+}
+
+/* --- TASKBAR --- */
+.taskbar {
+    height: 30px;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    position: relative;
+    z-index: 9999;
+}
+
+.start-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    box-shadow: inset -1px -1px 0 var(--win-border-dark);
+    gap: 4px;
+}
+.start-button:active, .start-button.active {
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+    padding: 1px 4px -1px 6px; /* Efeito afundado */
+}
+
+.taskbar-tasks {
+    flex-grow: 1;
+    display: flex;
+    gap: 2px;
+    padding: 0 5px;
+}
+
+.taskbar-btn {
+    height: 100%;
+    min-width: 120px;
+    max-width: 150px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    box-shadow: inset -1px -1px 0 var(--win-border-dark);
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.taskbar-btn.active {
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><rect width="1" height="1" fill="%23c0c0c0"/><rect width="1" height="1" x="1" y="1" fill="%23c0c0c0"/><rect width="1" height="1" x="1" fill="%23e0e0e0"/><rect width="1" height="1" y="1" fill="%23e0e0e0"/></svg>');
+    font-weight: bold;
+}
+
+.taskbar-tray {
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    border-top: 2px solid var(--win-border-darker);
+    border-left: 2px solid var(--win-border-darker);
+    border-right: 2px solid var(--win-border-light);
+    border-bottom: 2px solid var(--win-border-light);
+    box-shadow: inset 1px 1px 0 var(--win-border-dark);
+    font-size: 11px;
+}
+
+/* --- START MENU --- */
+.start-menu {
+    position: absolute;
+    bottom: 30px;
+    left: 2px;
+    width: 200px;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
+    border-left: 2px solid var(--win-border-light);
+    border-right: 2px solid var(--win-border-darker);
+    border-bottom: 2px solid var(--win-border-darker);
+    box-shadow: inset -1px -1px 0 var(--win-border-dark), 2px 2px 5px rgba(0,0,0,0.3);
+    display: none; /* Hide by default */
+    z-index: 10000;
+}
+
+.start-menu.show {
+    display: flex;
+}
+
+.start-menu-sidebar {
+    width: 25px;
+    background: var(--title-bg);
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 5px;
+}
+
+.sidebar-text {
+    color: white;
+    font-weight: bold;
+    transform: rotate(-90deg);
+    transform-origin: bottom left;
+    white-space: nowrap;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.start-menu-items {
+    flex-grow: 1;
+    padding: 2px;
+    display: flex;
+    flex-direction: column;
+}
+
+.start-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+.start-item:hover {
+    background: var(--title-bg);
+    color: white;
+}
+
+.start-divider {
+    height: 2px;
+    background: var(--win-border-dark);
+    border-bottom: 1px solid var(--win-border-light);
+    margin: 2px 0;
+}
